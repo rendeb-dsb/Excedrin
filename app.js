@@ -1,4 +1,4 @@
-const KEY="excedrinData", DB_NAME="ExcedrinDB", DB_VERSION=1, STORE_NAME="records", VERSION=31;
+const KEY="excedrinData", DB_NAME="ExcedrinDB", DB_VERSION=1, STORE_NAME="records", VERSION=32;
 let data={version:VERSION,records:[]},editMode=null,editIndex=-1;
 const $=id=>document.getElementById(id);
 const fileButton=$("fileButton"),fileMenu=$("fileMenu"),listScreen=$("listScreen"),editScreen=$("editScreen"),statsScreen=$("statsScreen");
@@ -48,6 +48,7 @@ function updateTimeSince(){
 
 function render(selected=-1){
  const rows=recordsSorted(), body=$("recordBody");body.innerHTML="";
+ const stamps=rows.map(x=>{const d=dateObj(x.r.date),t=timeObj(x.r.time);return d&&t?new Date(d.y,d.mo-1,d.d,t.h,t.n).getTime():null;});
  const counts=new Map();rows.forEach(x=>counts.set(x.r.date,(counts.get(x.r.date)||0)+1));
  const colors=new Map();let c=0;rows.forEach(x=>{if(counts.get(x.r.date)>=2&&!colors.has(x.r.date))colors.set(x.r.date,c++%6)});
  $("emptyMessage").classList.toggle("hidden",rows.length>0);
@@ -59,7 +60,13 @@ function render(selected=-1){
  day.textContent=parsed?dayNames[new Date(parsed.y,parsed.mo-1,parsed.d).getDay()]:"";
  const d=document.createElement("td");d.textContent=x.r.date;
  const t=document.createElement("td");t.textContent=x.r.time;
- tr.append(a,day,d,t);body.append(tr)})
+ const diff=document.createElement("td");
+ if (stamps[rows.indexOf(x)]!==null && rows.indexOf(x)<rows.length-1 && stamps[rows.indexOf(x)+1]!==null) {
+   const mins=Math.max(0,Math.floor((stamps[rows.indexOf(x)]-stamps[rows.indexOf(x)+1])/60000));
+   const dd=Math.floor(mins/1440), hh=Math.floor((mins%1440)/60), mm=mins%60;
+   diff.textContent=String(dd).padStart(2,"0")+":"+String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");
+ } else diff.textContent="";
+ tr.append(a,day,d,t,diff);body.append(tr)})
  updateTimeSince();
 }
 function selected(){const r=document.querySelector('input[name="selected"]:checked');return r?+r.value:-1}
@@ -218,7 +225,7 @@ $("statsButton").onclick=e=>{e.stopPropagation();showStats()};
 const versionLabel=$("versionLabel"); if(versionLabel) versionLabel.textContent="v"+VERSION;
 dbPromise.then(()=>render()).catch(e=>{document.body.innerHTML="<div style=\"padding:24px;font:18px Arial,sans-serif\"><h2>Excedrin could not start safely</h2><p>"+String(e.message||e)+"</p><p>No records were deleted.</p></div>"});
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw-v31.js").then(reg=>{
+  navigator.serviceWorker.register("sw-v32.js").then(reg=>{
     try { reg.update(); } catch(e) {}
   }).catch(()=>{});
 }

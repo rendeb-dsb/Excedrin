@@ -1,9 +1,7 @@
-Excedrin PWA v31
+Excedrin PWA v32
 
-Version-number correction release.
-
-- Visible and internal application version are v31.
-- Existing IndexedDB records are preserved.
-- The application registers sw-v31.js.
-- sw-v31.js uses the v31 cache and takes control immediately.
-- Do not clear browser site data or IndexedDB for this update.
+- Added Diff column to the main List.
+- Diff is the elapsed time between each dose and the next older dose, displayed as dd:hh:mm.
+- The oldest record has a blank Diff because there is no earlier dose to compare.
+- Version is v32.
+- Existing IndexedDB records are preserved; do not clear browser site data or IndexedDB.

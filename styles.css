@@ -18,7 +18,7 @@ h1{margin:0;font-size:30px}
 .hidden{display:none!important}
 main{padding:18px 22px}
 table{width:auto;border-collapse:collapse;border:1px solid #ccc;table-layout:fixed}
-.col-select{width:46px}.col-day{width:42px}.col-date{width:98px}.col-time{width:62px}
+.col-select{width:46px}.col-day{width:42px}.col-date{width:98px}.col-time{width:62px}.col-diff{width:82px}
 th,td{padding:3px 8px;border-bottom:1px solid #ddd;text-align:left;font-size:16px;line-height:1.05;height:28px}
 th{background:#eee}
 td:first-child,th:first-child{text-align:center;width:52px;padding-left:2px;padding-right:2px}
